@@ -18,10 +18,16 @@ module Easymvc
   		end
 
   		controller_class, action = get_controller_and_action(env)
-  		response = controller_class.new.send(action)
+      controller = controller_class.new(env)
+  		response = controller.send(action)
 
+      if controller.get_response
+        controller.get_response
+      else
+        controller.render(action)
+        controller.get_response
+      end
 
-  		[200, {"Content-type"=>"text/html"},[ response ]]
   	end
 
   	def get_controller_and_action(env)
